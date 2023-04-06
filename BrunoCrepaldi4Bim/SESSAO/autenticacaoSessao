@@ -1,0 +1,70 @@
+<?php
+/**
+ * 
+ * dados do formulário
+ * 
+ * name="email" type="email"
+ * name="senha" type="password"
+ * name="entar" type="submit"
+ */
+
+// se o usuario clicou no botão entrar
+if(isset($_POST['entrar'])):
+
+// pegar os dados do formulário
+
+$email = $_POST['email'];
+$senha = $_POST['senha'];
+// verifico no bd se existe o usuário
+$sql = "select * from 
+usuario where email = '{$email}' 
+and senha = '{$senha}'";
+$conexao = mysqli_connect('127.0.0.1','root','','web2');
+$resultado = mysqli_query($conexao,$sql);
+
+//nº de linhas (usuario) que retornou do select (1 ou 0)
+$numLinhas = mysqli_num_rows($resultado);
+
+// autentico em sessão
+if ($numLinhas > 0) {
+    $linha = mysqli_fetch_array($resultado);
+    
+// gravo dados em sessão
+    session_start();
+    $_SESSION['nome'] = $linha['nome'];
+    $_SESSION['email'] = $linha['email'];
+    header("location: login.php");
+}else{
+    //redireciona para login
+      $mensagem = "usuario e senha invalidos";
+      //redireciona no php
+      header("location: index.php?mensagem={$mensagem}");
+}
+endif;
+?>
+
+verifica autenticação atualizado
+
+
+<?php
+//verifica se esta logado ou não em area restrita
+
+if(session_status() !== PHP_SESSION_ACTIVE){
+    session_start();
+}
+
+//verifica se existe usuario logado
+
+if (!isset($_SESSION['id'])) :
+    //redireciona para a pagina de login se não estiveer logado
+    $msg = "sessão expirada, faça login novamente";
+    header("location:index.php?mensagem={$msg}");
+
+endif;
+
+// colocar este link no usuarioListar, alterar, e outras paginas restritas com 
+//require_once('verificaAutentificacao');
+
+
+
+?>
