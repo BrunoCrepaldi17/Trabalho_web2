@@ -1,20 +1,26 @@
 <?php
  require_once("menu.php"); 
-if (isset($_POST['cadastrar'])) {
-    
-
-
-// conectar no banco de dados
 $conexao = mysqli_connect('127.0.0.1','root','', 'web2');
+
+
+
+if (isset($_POST['cadastrar'])) {
+  
+// conectar no banco de dados
 
 //echo "Conectou...";
 // pega dados do formulario
 $nome = $_POST['nome'];
+$sigla = $_POST['sigla'];
+$medida = $_POST['medida'];
+$categoriaproduto_id = $_POST['categoriaproduto_id'];
+
+
 // SQL linguagem para manipular banco de dados
 
-$sql = "insert into produtos (nome)
+$sql = "insert into produtos (nome, sigla, medida, categoriaproduto_id)
                 
-                values('{$nome}')";
+                values('{$nome}','{$sigla}','{$medida}', {$categoriaproduto_id})";
 
     mysqli_query($conexao, $sql);//executar a instrucao sql no bd
 
@@ -55,8 +61,33 @@ $sql = "insert into produtos (nome)
   
   <label for="nome">Nome</label>
 <input name = "nome"type="nome" class="form-control" id="nome" aria-describedby="email" placeholder="Seu nome">
-    
-  </div>
+<br>
+<label for="sigla">Sigla</label>
+<input name = "sigla"type="sigla" class="form-control" id="sigla" aria-describedby="email" placeholder="Sua sigla">
+<br>
+ <div class="input-group">
+  <input name = "medida" type="text" class="form-control" aria-label="Dollar amount (with dot and two decimal places)">
+  <span class="input-group-text">$</span>
+  <span class="input-group-text">0.00</span>
+</div>
+<br> 
+
+<label for="categoriaproduto_id">Categoria do Produto</label>
+        <select class="form-select" name="categoriaproduto_id" id="categoriaproduto_id" aria-label="Default select example">
+          <option selected>Selecione a Categoria</option>
+          <?php 
+          $sql = "select * from categoriaproduto order by nome";
+          $resultado = mysqli_query($conexao, $sql);
+          while ($linha = mysqli_fetch_array($resultado)) {
+            $id_categoriaproduto = $linha['id_categoriaproduto'];
+            $nome = $linha['nome'];
+            $selecionado = ($id_categoriaproduto == $categoriaproduto_id) ? 'selected' : '';
+            echo "<option {$selecionado} value='{$id_categoriaproduto}'>{$nome}</option>";
+          }
+          ?>
+        </select>
+
+</div>
   <button name="cadastrar" type="submit" class="btn btn-primary">Cadastrar</button> 
   <a href="ProdutosListar.php" onclick="return confirm('confirme a ação ?')">
             <button type="button" class="btn btn-warning">Voltar</button>

@@ -1,9 +1,9 @@
 <?php
 require_once("menu.php");
-
+$conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
 //o usuario não pode ser aberto na url, deve ser chamado do listagemUsuarios.php
 
-$conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
+
 if (isset($_POST['alterar'])) {
     $nome = $_POST['nome'];
     $cpf = $_POST['cpf'];
@@ -12,11 +12,11 @@ if (isset($_POST['alterar'])) {
     $endereco = $_POST['endereco'];
     $numero = $_POST['numero'];
     $cidade = $_POST['cidade'];
-    $estado = $_POST['estado'];
+    $estado_id = $_POST['estado_id'];
     $status = $_POST['status'];
 
     $sql = "update cliente set nome = '{$nome}', cpf = '{$cpf}', email ='{$email}', telefone = '{$telefone}', 
-    endereco = '{$endereco}', numero = '{$numero}', cidade = '{$cidade}', estado = '{$estado}', status = '{$status}'
+    endereco = '{$endereco}', numero = '{$numero}', cidade = '{$cidade}', estado_id = {$estado_id}, status = '{$status}'
 where id_cliente = " . $_POST['id'];
     $resultado = mysqli_query($conexao, $sql);
     $mensagem = "registro salvo com sucesso.";
@@ -70,9 +70,21 @@ $cliente = mysqli_fetch_array($resultado);
                 <label for="cidade">Cidade</label>
                 <input name="cidade" type="cidade" class="form-control" id="cidade" aria-describedby="email" placeholder="Seu cidade" required value="<?= $cliente['cidade'] ?>">
 
-                <label for="estado">Estado</label>
-                <input name="estado" type="estado" class="form-control" id="estado" aria-describedby="email" placeholder="Seu estado" required value="<?= $cliente['estado'] ?>">
-
+                <label for="estado_id">Estado</label>
+                <select class="form-select" name="estado_id" id="estado_id" aria-label="Default select example"  required value="<?= $cliente['estado_id'] ?>">
+                    <option selected>Selecione o Estado</option>
+                    <?php $conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
+                    $sql = "select * from estado order by nome";
+                    $resultado = mysqli_query($conexao, $sql);
+                    while ($linha = mysqli_fetch_array($resultado)) {
+                        $id_estado = $linha['id_estado'];
+                        $nome = $linha['nome'];
+                        $selecionado = ($id_estado == $estado_id) ? 'selected' : '';
+                        echo "<option {$selecionado} value='{$id_estado}'>{$nome}</option>";
+                    }
+                    ?>
+                </select>
+                <br>
                 <label for="Status">Status</label>
                 <select name="status" id="status" class="form-select" aria-label="Default select example">
                     <option selected>Selecione S para Ativo e N para Inativo</option>

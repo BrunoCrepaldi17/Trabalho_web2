@@ -1,4 +1,11 @@
-<?php require_once("menu.php");  ?>
+<?php require_once("menu.php"); 
+
+//LISTANDO CADASTROS DO BANCO
+$conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
+$sql = "select * from grupousuario";
+$resultado = mysqli_query($conexao, $sql);
+$qtd = mysqli_num_rows($resultado);
+?>
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -30,7 +37,7 @@
     <a href="GrupoUsuarioCadastrar.php" onclick="return confirm('confirme a ação?')">
       <button type="button" class="btn btn-primary">Adicionar Novo</button>
     </a>
-   
+    <div class="container"><p class="card-text"><?= $qtd ?> Registros encontrados.</p></div> 
     <table class="table">
       <thead>
         <tr>
@@ -44,6 +51,7 @@
         $conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
         $sql = "select * from grupousuario";
         $resultado = mysqli_query($conexao, $sql);
+        $qtd = mysqli_num_rows($resultado);
         while ($linha = mysqli_fetch_array($resultado)) {
         ?>
           <th><?= $linha['id_grupoUsuario'] ?></th>

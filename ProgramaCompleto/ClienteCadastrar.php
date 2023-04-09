@@ -1,13 +1,13 @@
 <?php
 require_once("menu.php");
-
+$conexao = mysqli_connect('127.0.0.1','root','', 'web2');
 
 if (isset($_POST['cadastrar'])) {
     
 
 
 // conectar no banco de dados
-$conexao = mysqli_connect('127.0.0.1','root','', 'web2');
+
 
 //echo "Conectou...";
 // pega dados do formulario
@@ -18,14 +18,14 @@ $telefone = $_POST['telefone'];
 $endereco = $_POST['endereco'];
 $numero = $_POST['numero'];
 $cidade = $_POST['cidade'];
-$estado = $_POST['estado'];
+$estado_id = $_POST['estado_id'];
 $status = $_POST['status'];
 
 // SQL linguagem para manipular banco de dados
 
-$sql = "insert into cliente (nome, cpf, email, telefone, endereco, numero, cidade, estado, status)
+$sql = "insert into cliente (nome, cpf, email, telefone, endereco, numero, cidade, estado_id, status)
                 
-  values('{$nome}','{$cpf}','{$email}','{$telefone}','{$endereco}','{$numero}','{$cidade}','{$estado}','{$status}')";
+  values('{$nome}','{$cpf}','{$email}','{$telefone}','{$endereco}','{$numero}','{$cidade}','{$estado_id}','{$status}')";
 
 
          
@@ -99,9 +99,22 @@ else {
     <label for="cidade">Cidade</label>
     <input name = "cidade"type="cidade" class="form-control" id="cidade" aria-describedby="cidade" placeholder="Sua Cidade">
     <h1></h1>
-    <label for="estado">Estado</label>
-    <input name = "estado"type="estado" class="form-control" id="estado" aria-describedby="estado" placeholder="Seu Estado">
-    <h1></h1>
+    <label for="estado_id">Estado</label>
+        <select class="form-select" name="estado_id" id="estado_id" aria-label="Default select example">
+          <option selected>Selecione o Estado</option>
+          <?php
+          $sql = "select * from estado order by nome";
+          $resultado = mysqli_query($conexao, $sql);
+          while ($linha = mysqli_fetch_array($resultado)) {
+            $id_estado = $linha['id_estado'];
+            $nome = $linha['nome'];
+            $selecionado = ($id_estado == $estado_id) ? 'selected' : '';
+            echo "<option {$selecionado} value='{$id_estado}'>{$nome}</option>";
+          }
+          ?>
+        </select>
+
+
     <label for="Status">Status</label>
     <select name = "status" id="status"class="form-select" aria-label="Default select example">
   <option selected>Selecione S para Ativo e N para Inativo</option>

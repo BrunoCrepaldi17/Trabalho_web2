@@ -1,4 +1,21 @@
-<?php require_once("menu.php");  ?>
+<?php require_once("menu.php");  
+ $conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
+ $where = "";
+if (isset($_POST['nome']) && $_POST['nome'] != '') {
+    $where .= "and usuario.nome like '%" . $_POST['nome'] . "%' ";
+}
+
+if (isset($_POST['email']) && $_POST['email'] != '') {
+    $where .= "and email = '" . $_POST['email'] . "' ";
+}
+$sql = "select usuario.*, grupousuario.nome as nome_grupo_usuario
+        from usuario
+        left join grupousuario on grupousuario.id_grupousuario = usuario.grupousuario_id
+        where 1 = 1 " . $where;
+
+$resultado = mysqli_query($conexao, $sql);
+$qtd = mysqli_num_rows($resultado);
+?>
 <!DOCTYPE html>
 <html lang="pt">
 
@@ -12,9 +29,8 @@
 
 <body>
   <?php
-
   //EXCLUINDO REGISTRO DO BANCO
-  $conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
+ 
   if (isset($_GET['id'])) {
     $sql = "delete from usuario where id_usuario = " . $_GET['id'];
     mysqli_query($conexao, $sql);
@@ -33,6 +49,7 @@
       <button type="button" class="btn btn-primary">Adicionar Novo</button>
     </a>
     <br>
+    <div class="container"><p class="card-text"><?= $qtd ?> Registros encontrados.</p></div> 
     <br>
     <h3>Filtros de usuario</h3>
     <form method="GET">
@@ -84,6 +101,7 @@
         $sql = "SELECT usuario.id_usuario, usuario.nome, usuario.sexo, usuario.email, usuario.grupoUsuario_id, grupousuario.nome AS nome_grupo_usuario FROM usuario 
          INNER JOIN grupousuario ON usuario.grupoUsuario_id = grupousuario.id_grupoUsuario;";
         $resultado = mysqli_query($conexao, $sql);
+        
         while ($linha = mysqli_fetch_array($resultado)) {
         ?>
           <tr>
@@ -102,7 +120,8 @@
             </th>
           </tr>
         <?php
-        }
+        } 
+
         ?>
       </tbody>
     </table>

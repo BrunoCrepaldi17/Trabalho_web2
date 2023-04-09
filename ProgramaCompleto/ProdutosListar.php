@@ -31,6 +31,7 @@ $where = '';
         }
         $sql = "select * from produtos";
         $resultado = mysqli_query($conexao, $sql);
+        $qtd = mysqli_num_rows($resultado);
 ?>
   <div class="container">
     <?php if (isset($mensagem)): ?>
@@ -44,6 +45,7 @@ $where = '';
       <button type="button" class="btn btn-primary">Adicionar Novo</button>
     </a>
     <br>
+    <div class="container"><p class="card-text"><?= $qtd ?> Registros encontrados.</p></div> 
     <br>
     <form method="POST" class="form-inline mb-4">
       <div class="form-group mx-sm-3 mb-2">
@@ -58,14 +60,28 @@ $where = '';
         <tr>
           <th scope="col">id</th>
           <th scope="col">nome</th>
+          <th scope="col">sigla</th>
+          <th scope="col">medida</th>
+          <th scope="col">Categoria Produto</th>
+
         </tr>
       </thead>
       <tbody>
        <?php
-        while ($linha = mysqli_fetch_array($resultado)) {
+              $conexao = mysqli_connect('127.0.0.1', 'root', '', 'web2');
+              $sql = "SELECT produtos.id_produto, produtos.nome, produtos.sigla, produtos.medida, produtos.categoriaproduto_id, categoriaproduto.nome 
+              AS nome_categoriaproduto FROM produtos 
+               INNER JOIN  categoriaproduto ON produtos.categoriaproduto_id = categoriaproduto.id_categoriaproduto;";
+              $resultado = mysqli_query($conexao, $sql);
+              
+              while ($linha = mysqli_fetch_array($resultado)) {
         ?>
           <th><?= $linha['id_produto'] ?></th>
           <th><?= $linha['nome'] ?></th>
+          <th><?= $linha['sigla'] ?></th>
+          <th><?= $linha['medida'] ?></th>
+          <th><?= $linha['nome_categoriaproduto'] ?></th>
+          
           <th>
           <a href="ProdutosAlterar.php?id=<?= $linha['id_produto'] ?>" onclick="return confirm('confirme alteração?')">
             <button type="button" class="btn btn-warning">Alterar</button>

@@ -65,7 +65,8 @@ if (!isset($_SESSION['nome'])) {
       </li>
       <li>
         <div class="container">
-           <span class="nav-link active">|---------------------TRABALHO WEB 2 - BRUNO CREPALDI-----------------------|</span>
+          <span class="nav-link active">|---------------------TRABALHO WEB 2 - BRUNO CREPALDI-----------------------|</span>
+
       <li class="nav-item">
         <span class="nav-link active">Seja Bem Vindo, <?php echo $_SESSION['nome'] ?></span>
       </li>
